@@ -6,6 +6,11 @@ const bcrypt = require('bcryptjs');
 const path = require('path')
 const fs = require('fs')
 
+// import jsonwebtoken value
+const jwt = require('jsonwebtoken');
+// import the jwt secret key
+const JWT_SECRET = process.env.JWT_SECRET;
+
 // import the multer module for files
 const multer = require('multer');
 
@@ -63,7 +68,35 @@ router.post("/register",upload.single('photo'),async(req,res)=>{
 });
 
 
- 
+// Below is the login endpoint
+router.post("/login",async (req,res) => {
+  // we shall use the email and the password during signin
+  const { email, password } = req.body;
+
+  // show the entered records from insomnia
+//   console.log("The entered email is ", email);
+//   console.log("The entered password is ", password);
+
+  // check whether the email entered is registered in database
+  const user = await User.findOne({email});
+  console.log("The details of user are", user);
+  if (!user) return res.status(400).json({ message: "User Not Found" });
+
+  // check whether the password entered matches with the one in db
+  const isMatch = await bcrypt.compare(password, user.password);
+  
+  if (!isMatch) return res.status(400).json({ message: "Invalid Password" });
+
+  const token = jwt.sign({id:user._id},{expiresIn:'1hr'})
+  console.log("The generated token is ",token)
+  res.json({token,user})
+
+
+
+}) 
+
+
+
 
 // export the router
 module.exports = router;
