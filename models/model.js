@@ -44,7 +44,7 @@ const employeeSchema = new Schema({
 
 // departmentSchema
 const departmentSchema = new Schema({
-    name:{Type:String,required:true,unique:true},
+    name:{type:String,required:true,unique:true},
     description:String,
     managerId:{type:Schema.Types.ObjectId,ref:'Employee',default:null},
     createdAt:{type:Date,default:Date.now},
