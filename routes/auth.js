@@ -71,7 +71,7 @@ router.post("/register",upload.single('photo'),async(req,res)=>{
 // Below is the login endpoint
 router.post("/login",async (req,res) => {
   // we shall use the email and the password during signin
-  const { email, password } = req.body;
+  const{email,password}=req.body;
 
   // show the entered records from insomnia
 //   console.log("The entered email is ", email);
@@ -80,7 +80,7 @@ router.post("/login",async (req,res) => {
   // check whether the email entered is registered in database
   const user = await User.findOne({email});
   console.log("The details of user are", user);
-  if (!user) return res.status(400).json({ message: "User Not Found" });
+  if (!user) return res.status(400).json({message: "User Not Found"});
 
   // check whether the password entered matches with the one in db
   const isMatch = await bcrypt.compare(password, user.password);
