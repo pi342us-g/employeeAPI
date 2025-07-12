@@ -1,12 +1,11 @@
 // import express
 const express = require("express");
 
-
 // import the mongoose module that will help you connect with database
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 // import the dotenv module
-require('dotenv').config()
+require("dotenv").config();
 
 // create an express application
 const app = express();
@@ -14,24 +13,25 @@ const app = express();
 app.use(express.json());
 
 // import the auth routers
-const authRoutes = require('./routes/auth')
-app.use('/api/auth',authRoutes)
+const authRoutes = require("./routes/auth");
+app.use("/api/auth", authRoutes);
 
 // import the user routes
-const userRoutes= require("./routes/users");
-app.use("/api/user",userRoutes)
-
+const userRoutes = require("./routes/users");
+app.use("/api/user", userRoutes);
 
 // connect to the database
-mongoose.connect(process.env.MONGO_URI).then(() => console.log("MongoDB connection succesfull")).catch((err) => console.error("Error connecting to the MongoDb",err));
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB connection succesfull"))
+  .catch((err) => console.error("Error connecting to the MongoDb", err));
 
 // specify the port the application will  be running
-const PORT = process.env.PORT|| 3000;
-
+const PORT = process.env.PORT || 3000;
 
 // listen to the port
-app.listen(PORT,()=>{
-    console.log("The server is running on port "+ PORT)
+app.listen(PORT, () => {
+  console.log("The server is running on port " + PORT);
 });
 
 // setup project of your own with atleast 3 schema and connect to online and local db
