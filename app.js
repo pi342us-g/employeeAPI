@@ -20,6 +20,10 @@ app.use("/api/auth", authRoutes);
 const userRoutes = require("./routes/users");
 app.use("/api/user", userRoutes);
 
+// import the department routes
+const departmentRoutes=require("./routes/department");
+app.use("api/departments",departmentRoutes)
+
 // connect to the database
 mongoose
   .connect(process.env.MONGO_URI)

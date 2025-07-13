@@ -33,7 +33,7 @@ router.get("/:id",auth, async (req, res) => {
 });
 
 // below is the update route for user
-router.put("/:id", async (req, res) => {
+router.put("/:id",auth, async (req, res) => {
   try {
     // destructure the details you want to update for user
     const { name, email, age, password } = req.body;
@@ -68,7 +68,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // Below is the delete route for the user
-router.delete("/:id", async (req, res) => {
+router.delete("/:id",auth, async (req, res) => {
   try {
     // Attempt to find and delete the user by their ID from url
     const deletedUser = await User.findByIdAndDelete(req.params.id);
