@@ -3,9 +3,11 @@ const router =express.Router()
 const{Employee,Department}=require("../models/model");
 
 
+// import the middleware for authorization
+const auth = require("../middleware/auth");
 
 // create new employee
-router.post("/",async (req,res) => {
+router.post("/",auth,async (req,res) => {
     try {
         // pick the details passed from the insomnia
         const{email,departmentId}=req.body;
@@ -36,7 +38,7 @@ router.post("/",async (req,res) => {
 
 // Below route is for viewing all employees available
 // Get all employee
-router.get("/",async (req,res) => {
+router.get("/",auth,async (req,res) => {
     try{
         // find all employees and put them in a variable
         const employees =await Employee.find().populate('userId','email name photo').populate('departmentId','name');
@@ -49,7 +51,7 @@ router.get("/",async (req,res) => {
 })
 
 // fetch a single employee based on the Id of the employee
-router.get("/:id",async(req,res)=>{
+router.get("/:id",auth,async(req,res)=>{
     try {
         // test whether id exists exists on a database
         const employee = await Employee.findById(req.params.id)
@@ -62,8 +64,43 @@ router.get("/:id",async(req,res)=>{
         res.status(500).json({error:err.message})
     }
 });
+// update given deatils of an employee
+router.put("/:id",auth, async(req, res)=>{
+    try{
+        // pick the details passed on insomia/postman
+        const {userId, firstName, lastName, email, departmentId, jobTitle, hireDate, salary, status} = req.body;
+
+        // console.log(userId, firstName, lastName, email, departmentId, jobTitle, hireDate, salary, status)
+
+        // validate department based on the departmentId passed/entered
+        if(departmentId){
+            const department = await Department.findById(departmentId);
+            if(!department){
+                return res.status(400).json({error : "Invalid Department ID"})
+            }
+        }
+        // proceed if the department id is valid
+        const employee = await Employee.findByIdAndUpdate(
+            req.params.id,
+            {userId, firstName, lastName, email, departmentId, jobTitle, hireDate, salary, status, updatedAt : Date.now()},
+            {new : true, runValidators : true}
+        );
+
+        if(!employee){
+            return res.status(404).json({message : "Employee not found"})
+        };
+
+        // if the details are successfully updated, return a response with the new employees' details
+        res.json(employee);
+
+    }
+    catch(err){
+        res.status(400).json({Error : err.message})
+    }
+});
+
 // delete employee
-router.delete("/:id",async(req,res)=>{
+router.delete("/:id",auth,async(req,res)=>{
     try{
         // fetch the particular employee id
         const employee = await Employee.findByIdAndDelete(req.params.id)
