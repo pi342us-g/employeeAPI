@@ -22,7 +22,11 @@ app.use("/api/user", userRoutes);
 
 // import the department routes
 const departmentRoutes=require("./routes/department");
-app.use("api/departments",departmentRoutes)
+app.use("/api/department",departmentRoutes)
+
+// import employee route
+const employeeRoutes =require("./routes/employees")
+app.use("/api/employees",employeeRoutes)
 
 // connect to the database
 mongoose
